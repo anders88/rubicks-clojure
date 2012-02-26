@@ -28,8 +28,9 @@
 )
 
 
-(with-test
+(with-test  
   (defn rotate [side]
+    "Rotates a side clockwise"
     [[ (first (last side))  (first (second side)) (first (first side)) ]
      [ (second (last side)) (second (second side)) (second (first side))]
      [ (last (last side))     (last (second side))   (last (first side))] 
@@ -48,3 +49,17 @@
       )
      )
   )
+
+(with-test 
+  (defn turn-right-vertical [from-side into-side]
+    [[(first (first into-side)) (second (first into-side)) (last (first from-side))]
+     [(first (second into-side)) (second (second into-side)) (last (second from-side))]
+     [(first (last into-side)) (second (last into-side)) (last (last from-side))]
+     ]
+    )
+  (is (= [[:g :g :w] [:g :g :w] [:g :g :w]] (turn-right-vertical (solved :w) (solved :g))))
+  )
+     
+  
+
+(run-tests)
