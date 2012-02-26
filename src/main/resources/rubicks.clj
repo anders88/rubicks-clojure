@@ -52,6 +52,7 @@
 
 (with-test 
   (defn turn-right-vertical [from-side into-side]
+    "Turns one right vertical into another"
     [[(first (first into-side)) (second (first into-side)) (last (first from-side))]
      [(first (second into-side)) (second (second into-side)) (last (second from-side))]
      [(first (last into-side)) (second (last into-side)) (last (last from-side))]
@@ -60,6 +61,16 @@
   (is (= [[:g :g :w] [:g :g :w] [:g :g :w]] (turn-right-vertical (solved :w) (solved :g))))
   )
      
+(with-test 
+  (defn turn-left-vertical [from-side into-side]
+    "Turns one left vertical into another"
+    [[(first (first from-side)) (second (first into-side)) (last (first into-side))]
+     [(first (second from-side)) (second (second into-side)) (last (second into-side))]
+     [(first (last from-side)) (second (last into-side)) (last (last into-side))]
+     ]
+    )
+  (is (= [[:w :g :g] [:w :g :g] [:w :g :g]] (turn-left-vertical (solved :w) (solved :g))))
+  )
   
 
 (run-tests)
