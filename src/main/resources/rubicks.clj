@@ -74,16 +74,22 @@
 
 (with-test
   (defn turn-top-horizontal [from-side into-side]
-    [(first from-side) (second into-side) (last into-side)]
-    )
+    (if (= :b (second (second into-side)))
+      [(last from-side) (second from-side) (first into-side)]
+      [(first from-side) (second into-side) (last into-side)]
+    ))
  (is (= [[:r :r :r] [:g :g :g] [:g :g :g]] (turn-top-horizontal (solved :r) (solved :g))))
+ (is (= [[:b :b :b] [:b :b :b] [:o :o :o]] (turn-top-horizontal (solved :o) (solved :b))))
 )
 
 (with-test
   (defn turn-bottom-horizontal [from-side into-side]
-    [(first into-side) (second into-side) (last from-side)]
-    )
+    (if (= :b (second (second into-side)))
+      [(last from-side) (second into-side) (last into-side)]
+      [(first into-side) (second into-side) (last from-side)]
+    ))
  (is (= [[:g :g :g] [:g :g :g] [:r :r :r]] (turn-bottom-horizontal (solved :r) (solved :g))))
+ (is (= [[:o :o :o] [:b :b :b] [:b :b :b]] (turn-bottom-horizontal (solved :o) (solved :b))))
 )
 
 (run-tests)
