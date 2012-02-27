@@ -71,6 +71,12 @@
     )
   (is (= [[:w :g :g] [:w :g :g] [:w :g :g]] (turn-left-vertical (solved :w) (solved :g))))
   )
-  
+
+(with-test
+  (defn turn-top-horizontal [from-side into-side]
+    [(first from-side) (second into-side) (last into-side)]
+    )
+ (is (= [[:r :r :r] [:g :g :g] [:g :g :g]] (turn-top-horizontal (solved :r) (solved :g))))
+)
 
 (run-tests)
