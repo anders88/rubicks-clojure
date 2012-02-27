@@ -74,22 +74,32 @@
 
 (with-test
   (defn turn-top-horizontal [from-side into-side]
-    (if (= :b (second (second into-side)))
+    (cond 
+      (= :b (second (second into-side)))
       [(first into-side) (second into-side) (first from-side)]
+      (= :b (second (second from-side)))
+      [(last from-side) (second into-side) (last into-side)]
+      :else
       [(first from-side) (second into-side) (last into-side)]
     ))
  (is (= [[:r :r :r] [:g :g :g] [:g :g :g]] (turn-top-horizontal (solved :r) (solved :g))))
  (is (= [[:b :b :b] [:b :b :b] [:o :o :o]] (turn-top-horizontal (solved :o) (solved :b))))
+ (is (= [[:b :b :b] [:r :r :r] [:r :r :r]] (turn-top-horizontal (solved :b) (solved :r))))
 )
 
 (with-test
   (defn turn-bottom-horizontal [from-side into-side]
-    (if (= :b (second (second into-side)))
+    (cond 
+      (= :b (second (second into-side)))
       [(last from-side) (second into-side) (last into-side)]
+      (= :b (second (second from-side)))
+      [(first into-side) (second into-side) (first from-side)]
+      :else
       [(first into-side) (second into-side) (last from-side)]
     ))
  (is (= [[:g :g :g] [:g :g :g] [:r :r :r]] (turn-bottom-horizontal (solved :r) (solved :g))))
  (is (= [[:o :o :o] [:b :b :b] [:b :b :b]] (turn-bottom-horizontal (solved :o) (solved :b))))
+ (is (= [[:r :r :r] [:r :r :r] [:b :b :b]] (turn-bottom-horizontal (solved :b) (solved :r))))
 )
 
 (with-test
@@ -132,7 +142,40 @@
   (is (= [[:w :w :w] [:w :w :w] [:g :g :g]] ((turn-u (turn-r solved)) :w)))
 )
 
+(def max-turns 6)
+(def possible-turns [turn-r turn-u])
 
+(with-test
+  (defn solve [cube solution]
+    (let [find-solution (fn ! [cube solution moves]
+                          (if (empty? moves) []
+                          (let [a-solution (solve ((first moves) cube) (conj solution (first moves)))]
+                            (if (empty? a-solution) (! cube solution (rest moves))
+                              a-solution
+                          ))))
+                            
+          ]
+    (cond (= cube solved) solution 
+          (= (count solution) max-turns) []
+          :else
+          (find-solution cube solution possible-turns)  
+    )
+    ))
+  (is (= [] (solve solved [])))
+  (is (= [turn-r turn-r turn-r] (solve (turn-r solved) [])))
+  (is (= [turn-r] (solve (-> solved turn-r turn-r turn-r) [])))
+  (is (= [turn-r turn-r turn-r turn-r turn-u] (solve (-> solved turn-u turn-u turn-u) [])))
+  (is (= [turn-u turn-u turn-u] (solve (turn-u solved) [])))
+  (is (= [turn-r turn-r turn-r turn-u turn-u turn-u] (solve (turn-r (turn-u solved)) [])))
+  )
+  
+(defn printable-solution [solution]
+  (map (fn [step] (cond
+                    (= step turn-u) "turn-u"
+                    (= step turn-r) "turn-r"
+                    :else "xxxx"))
+       solution)
+  ) 
 
 
 (run-tests)
