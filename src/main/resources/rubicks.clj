@@ -79,4 +79,11 @@
  (is (= [[:r :r :r] [:g :g :g] [:g :g :g]] (turn-top-horizontal (solved :r) (solved :g))))
 )
 
+(with-test
+  (defn turn-bottom-horizontal [from-side into-side]
+    [(first into-side) (second into-side) (last from-side)]
+    )
+ (is (= [[:g :g :g] [:g :g :g] [:r :r :r]] (turn-bottom-horizontal (solved :r) (solved :g))))
+)
+
 (run-tests)
