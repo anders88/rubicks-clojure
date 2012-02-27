@@ -75,7 +75,7 @@
 (with-test
   (defn turn-top-horizontal [from-side into-side]
     (if (= :b (second (second into-side)))
-      [(last from-side) (second from-side) (first into-side)]
+      [(first into-side) (second into-side) (first from-side)]
       [(first from-side) (second into-side) (last into-side)]
     ))
  (is (= [[:r :r :r] [:g :g :g] [:g :g :g]] (turn-top-horizontal (solved :r) (solved :g))))
@@ -91,5 +91,48 @@
  (is (= [[:g :g :g] [:g :g :g] [:r :r :r]] (turn-bottom-horizontal (solved :r) (solved :g))))
  (is (= [[:o :o :o] [:b :b :b] [:b :b :b]] (turn-bottom-horizontal (solved :o) (solved :b))))
 )
+
+(with-test
+  (defn turn-r [cube]
+    "Turns the right vertical. Offical notation R"
+      {
+       :w (turn-right-vertical (cube :g) (cube :w))
+       :y (turn-right-vertical (cube :b) (cube :y))
+       :o (cube :o)
+       :r (rotate (cube :r))
+       :g (turn-right-vertical (cube :y) (cube :g))
+       :b (turn-right-vertical (cube :w) (cube :b))
+
+       }
+
+    )
+  (is (= [[:b :b :w] [:b :b :w] [:b :b :w]] ((turn-r solved) :b)))  
+  (is (= [[:y :y :b] [:y :y :b] [:y :y :b]] ((turn-r solved) :y)))
+)
+
+(with-test
+  (defn turn-u[cube]
+    "Turns the upper notation. Offical notation U"
+      {
+       :w (rotate (cube :w))
+       :y (cube :y)
+       :o (turn-top-horizontal (cube :g) (cube :o))
+       :r (turn-top-horizontal (cube :b) (cube :r))
+       :g (turn-top-horizontal (cube :r) (cube :g))
+       :b (turn-top-horizontal (cube :o) (cube :b))
+
+       }
+
+    )
+  (is (= [[:b :b :b] [:b :b :b] [:o :o :o]] ((turn-u solved) :b)))  
+  (is (= [[:y :y :y] [:y :y :y] [:y :y :y]] ((turn-u solved) :y)))
+  (is (= [[:r :r :r] [:g :g :g] [:g :g :g]] ((turn-u solved) :g)))
+  
+  (is (= [[:r :r :r] [:g :g :y] [:g :g :y]] ((turn-u (turn-r solved)) :g)))
+  (is (= [[:w :w :w] [:w :w :w] [:g :g :g]] ((turn-u (turn-r solved)) :w)))
+)
+
+
+
 
 (run-tests)
