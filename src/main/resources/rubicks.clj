@@ -104,7 +104,7 @@
 
 (with-test
   (defn turn-R [cube]
-    "Turns the right vertical. Offical notation R"
+    "Turns the right vertical up. Offical notation R"
       {
        :w (turn-Right-vertical (cube :g) (cube :w))
        :y (turn-Right-vertical (cube :b) (cube :y))
@@ -119,6 +119,17 @@
   (is (= [[:b :b :w] [:b :b :w] [:b :b :w]] ((turn-R solved) :b)))  
   (is (= [[:y :y :b] [:y :y :b] [:y :y :b]] ((turn-R solved) :y)))
 )
+
+(with-test
+  (defn turn-r [cube]
+    "Turns the right vertical down. Offical notation r"
+    (-> cube turn-R turn-R turn-R)
+    )
+  (is (= (-> solved turn-R turn-R) (-> solved turn-r turn-r)))  
+)
+
+
+
 
 (with-test
   (defn turn-U[cube]
@@ -141,6 +152,15 @@
   (is (= [[:r :r :r] [:g :g :y] [:g :g :y]] ((turn-U (turn-R solved)) :g)))
   (is (= [[:w :w :w] [:w :w :w] [:g :g :g]] ((turn-U (turn-R solved)) :w)))
 )
+
+(with-test
+  (defn turn-u [cube]
+    "Turns the upper notation anti-clock. Offical notation U"
+    (-> cube turn-U turn-U turn-U)
+    )
+  (is (= (-> solved turn-U turn-U) (-> solved turn-u turn-u)))  
+)
+
 
 (def max-turns 6)
 (def possible-turns [turn-R turn-U])
