@@ -162,8 +162,8 @@
 )
 
 
-(def max-turns 6)
-(def possible-turns [turn-R turn-U])
+(def max-turns 6) ;; Gods number with rubiks is 20 according to http://peacefulparadox.hubpages.com/hub/maximum-moves-needed-to-solve-rubiks-cube-is-gods-number-20
+(def possible-turns [turn-R turn-U turn-r turn-u])
 
 (with-test
   (defn solve
@@ -189,12 +189,15 @@
   (is (= [turn-U] (solve (-> solved turn-U turn-U turn-U))))
   (is (= [turn-U turn-U turn-U] (solve (turn-U solved))))
   (is (= [turn-R turn-R turn-R turn-U turn-U turn-U] (solve (turn-R (turn-U solved)))))
+  (is (= (reverse [turn-R turn-R turn-u turn-r turn-U turn-U]) (solve (-> solved turn-r turn-r turn-U turn-R turn-u turn-u))))
   )
   
 (defn printable-solution [solution]
   (map (fn [step] (cond
                     (= step turn-U) "turn-U"
                     (= step turn-R) "turn-R"
+                    (= step turn-u) "turn-u"
+                    (= step turn-r) "turn-r"
                     :else "xxxx"))
        solution)
   ) 
