@@ -121,7 +121,7 @@
 )
 
 (with-test
-  (defn turn-u[cube]
+  (defn turn-U[cube]
     "Turns the upper notation. Offical notation U"
       {
        :w (rotate (cube :w))
@@ -134,18 +134,16 @@
        }
 
     )
-  (is (= [[:b :b :b] [:b :b :b] [:o :o :o]] ((turn-u solved) :b)))  
-  (is (= [[:y :y :y] [:y :y :y] [:y :y :y]] ((turn-u solved) :y)))
-  (is (= [[:r :r :r] [:g :g :g] [:g :g :g]] ((turn-u solved) :g)))
+  (is (= [[:b :b :b] [:b :b :b] [:o :o :o]] ((turn-U solved) :b)))  
+  (is (= [[:y :y :y] [:y :y :y] [:y :y :y]] ((turn-U solved) :y)))
+  (is (= [[:r :r :r] [:g :g :g] [:g :g :g]] ((turn-U solved) :g)))
   
-  (is (= [[:r :r :r] [:g :g :y] [:g :g :y]] ((turn-u (turn-R solved)) :g)))
-  (is (= [[:w :w :w] [:w :w :w] [:g :g :g]] ((turn-u (turn-R solved)) :w)))
+  (is (= [[:r :r :r] [:g :g :y] [:g :g :y]] ((turn-U (turn-R solved)) :g)))
+  (is (= [[:w :w :w] [:w :w :w] [:g :g :g]] ((turn-U (turn-R solved)) :w)))
 )
 
-
-
 (def max-turns 6)
-(def possible-turns [turn-R turn-u])
+(def possible-turns [turn-R turn-U])
 
 (with-test
   (defn solve
@@ -168,14 +166,14 @@
   (is (= [] (solve solved)))
   (is (= [turn-R turn-R turn-R] (solve (turn-R solved))))
   (is (= [turn-R] (solve (-> solved turn-R turn-R turn-R))))
-  (is (= [turn-u] (solve (-> solved turn-u turn-u turn-u))))
-  (is (= [turn-u turn-u turn-u] (solve (turn-u solved))))
-  (is (= [turn-R turn-R turn-R turn-u turn-u turn-u] (solve (turn-R (turn-u solved)))))
+  (is (= [turn-U] (solve (-> solved turn-U turn-U turn-U))))
+  (is (= [turn-U turn-U turn-U] (solve (turn-U solved))))
+  (is (= [turn-R turn-R turn-R turn-U turn-U turn-U] (solve (turn-R (turn-U solved)))))
   )
   
 (defn printable-solution [solution]
   (map (fn [step] (cond
-                    (= step turn-u) "turn-u"
+                    (= step turn-U) "turn-U"
                     (= step turn-R) "turn-R"
                     :else "xxxx"))
        solution)
