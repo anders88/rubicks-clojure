@@ -146,27 +146,29 @@
 (def possible-turns [turn-r turn-u])
 
 (with-test
-  (defn solve [cube solution]
-    (let [find-solution (fn ! [cube solution moves]
+  (defn solve
+    ([cube] (solve cube [] []))
+    ([cube solution cube-paths]
+    (let [find-solution (fn ! [cube solution moves cube-paths]
                           (if (empty? moves) []
-                          (let [a-solution (solve ((first moves) cube) (conj solution (first moves)))]
-                            (if (empty? a-solution) (! cube solution (rest moves))
+                          (let [a-solution (solve ((first moves) cube) (conj solution (first moves)) (conj cube-paths cube))]
+                            (if (empty? a-solution) (! cube solution (rest moves) cube-paths)
                               a-solution
                           ))))
                             
           ]
-    (cond (= cube solved) solution 
-          (= (count solution) max-turns) []
+    (cond (= cube solved) solution                     
+          (or (contains? (set cube-paths) cube) (= (count solution) max-turns)) []
           :else
-          (find-solution cube solution possible-turns)  
-    )
-    ))
-  (is (= [] (solve solved [])))
-  (is (= [turn-r turn-r turn-r] (solve (turn-r solved) [])))
-  (is (= [turn-r] (solve (-> solved turn-r turn-r turn-r) [])))
-  (is (= [turn-r turn-r turn-r turn-r turn-u] (solve (-> solved turn-u turn-u turn-u) [])))
-  (is (= [turn-u turn-u turn-u] (solve (turn-u solved) [])))
-  (is (= [turn-r turn-r turn-r turn-u turn-u turn-u] (solve (turn-r (turn-u solved)) [])))
+          (find-solution cube solution possible-turns cube-paths)
+    )        
+    )))
+  (is (= [] (solve solved)))
+  (is (= [turn-r turn-r turn-r] (solve (turn-r solved))))
+  (is (= [turn-r] (solve (-> solved turn-r turn-r turn-r))))
+  (is (= [turn-u] (solve (-> solved turn-u turn-u turn-u))))
+  (is (= [turn-u turn-u turn-u] (solve (turn-u solved))))
+  (is (= [turn-r turn-r turn-r turn-u turn-u turn-u] (solve (turn-r (turn-u solved)))))
   )
   
 (defn printable-solution [solution]
